@@ -1,0 +1,173 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
+public class FitnessTrackerApp {
+    private static final HashMap<String, String> dietRecommendations = new HashMap<>();
+    private static final ArrayList<String> motivationalQuotes = new ArrayList<>();
+    private static int workoutDays = 0;
+    private static int trackedDays = 0;
+    private static String userName = "";
+
+    public static void main(String[] args) {
+        initializeDietRecommendations();
+        initializeMotivationalQuotes();
+        openDashboard();
+    }
+
+    private static void initializeDietRecommendations() {
+        dietRecommendations.put("Apple", "A healthy low-calorie snack.");
+        dietRecommendations.put("Chicken Breast", "Rich in protein, ideal for muscle building.");
+        dietRecommendations.put("Broccoli", "High in fiber, good for digestion.");
+        dietRecommendations.put("Brown Rice", "Great for sustained energy.");
+        dietRecommendations.put("Eggs", "Loaded with nutrients, an excellent breakfast choice.");
+    }
+
+    private static void initializeMotivationalQuotes() {
+        motivationalQuotes.add("“Push harder than yesterday if you want a different tomorrow.”");
+        motivationalQuotes.add("“The body achieves what the mind believes.”");
+        motivationalQuotes.add("“You are your only limit.”");
+        motivationalQuotes.add("“Take care of your body. It’s the only place you have to live.”");
+        motivationalQuotes.add("“Fall in love with taking care of yourself.”");
+    }
+
+    private static void openDashboard() {
+        JFrame dashboardFrame = new JFrame("Welcome To Fitness Tracker!");
+        dashboardFrame.setSize(600, 400);
+        dashboardFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        dashboardFrame.setLayout(new GridLayout(6, 1, 10, 10));
+
+        JLabel title = new JLabel("Fitness Tracker Dashboard", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+
+        JButton logWorkoutButton = new JButton("Log Workout");
+        JButton trackDataButton = new JButton("Track Meal");
+        JButton viewMetricsButton = new JButton("View Health Metrics");
+        JButton recommendationsButton = new JButton("Personalized Recommendations");
+        JButton exitButton = new JButton("Exit");
+
+        dashboardFrame.add(title);
+        dashboardFrame.add(logWorkoutButton);
+        dashboardFrame.add(trackDataButton);
+        dashboardFrame.add(viewMetricsButton);
+        dashboardFrame.add(recommendationsButton);
+        dashboardFrame.add(exitButton);
+
+        dashboardFrame.setVisible(true);
+
+        logWorkoutButton.addActionListener(e -> logWorkout(dashboardFrame));
+        trackDataButton.addActionListener(e -> trackMeal(dashboardFrame));
+        viewMetricsButton.addActionListener(e -> viewHealthMetrics(dashboardFrame));
+        recommendationsButton.addActionListener(e -> personalizedRecommendations(dashboardFrame));
+        exitButton.addActionListener(e -> System.exit(0));
+    }
+
+    private static void logWorkout(JFrame parentFrame) {
+        parentFrame.setVisible(false);
+
+        JFrame workoutFrame = new JFrame("Log Workout");
+        workoutFrame.setSize(400, 300);
+        workoutFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        workoutFrame.setLayout(new GridLayout(6, 2, 10, 10));
+
+        JLabel nameLabel = new JLabel("Name:");
+        JTextField nameField = new JTextField();
+        JLabel ageLabel = new JLabel("Age:");
+        JTextField ageField = new JTextField();
+        JLabel weightLabel = new JLabel("Weight (kg):");
+        JTextField weightField = new JTextField();
+        JLabel heightLabel = new JLabel("Height (cm):");
+        JTextField heightField = new JTextField();
+
+        JButton saveButton = new JButton("Save Workout");
+        JButton returnButton = new JButton("Return to Dashboard");
+
+        workoutFrame.add(nameLabel);
+        workoutFrame.add(nameField);
+        workoutFrame.add(ageLabel);
+        workoutFrame.add(ageField);
+        workoutFrame.add(weightLabel);
+        workoutFrame.add(weightField);
+        workoutFrame.add(heightLabel);
+        workoutFrame.add(heightField);
+        workoutFrame.add(saveButton);
+        workoutFrame.add(returnButton);
+
+        workoutFrame.setVisible(true);
+
+        saveButton.addActionListener(e -> {
+            workoutDays++;
+            userName = nameField.getText();
+            JOptionPane.showMessageDialog(workoutFrame, "Workout data saved!");
+        });
+
+        returnButton.addActionListener(e -> {
+            workoutFrame.dispose();
+            parentFrame.setVisible(true);
+        });
+    }
+
+    private static void trackMeal(JFrame parentFrame) {
+        parentFrame.setVisible(false);
+
+        JFrame mealFrame = new JFrame("Track Meal");
+        mealFrame.setSize(400, 400);
+        mealFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mealFrame.setLayout(new GridLayout(7, 2, 10, 10));
+
+        JLabel food1Label = new JLabel("Food Item 1:");
+        JTextField food1Field = new JTextField();
+
+        JLabel food2Label = new JLabel("Food Item 2:");
+        JTextField food2Field = new JTextField();
+
+        JLabel food3Label = new JLabel("Food Item 3:");
+        JTextField food3Field = new JTextField();
+
+        JButton saveButton = new JButton("Save Meals");
+        JButton returnButton = new JButton("Return to Dashboard");
+
+        mealFrame.add(food1Label);
+        mealFrame.add(food1Field);
+        mealFrame.add(food2Label);
+        mealFrame.add(food2Field);
+        mealFrame.add(food3Label);
+        mealFrame.add(food3Field);
+        mealFrame.add(saveButton);
+        mealFrame.add(returnButton);
+
+        mealFrame.setVisible(true);
+
+        saveButton.addActionListener(e -> {
+            trackedDays++;
+            JOptionPane.showMessageDialog(mealFrame, "Meal data saved!");
+        });
+
+        returnButton.addActionListener(e -> {
+            mealFrame.dispose();
+            parentFrame.setVisible(true);
+        });
+    }
+
+    private static void viewHealthMetrics(JFrame parentFrame) {
+        String quote = motivationalQuotes.get(new Random().nextInt(motivationalQuotes.size()));
+        JOptionPane.showMessageDialog(parentFrame,
+                "Health Metrics:\n" +
+                        "- Workout Days: " + workoutDays + "\n" +
+                        "- Tracked Meals Days: " + trackedDays + "\n" +
+                        "\nMotivational Quote:\n" + quote + "\nKeep going, " + userName + "!");
+    }
+
+    private static void personalizedRecommendations(JFrame parentFrame) {
+        String quote = motivationalQuotes.get(new Random().nextInt(motivationalQuotes.size()));
+        JOptionPane.showMessageDialog(parentFrame,
+                "Personalized Recommendations:\n" +
+                        "- Stay consistent.\n" +
+                        "- Focus on balanced meals.\n" +
+                        "- Exercise regularly.\n\n" +
+                        "Motivational Quote:\n" + quote + "\nYou’ve got this, " + userName + "!");
+    }
+}
